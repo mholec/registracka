@@ -30,6 +30,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Registration'
+          headers: {}
         '400':
           $ref: '#/components/responses/400-BadRequest'
         '404':
@@ -37,7 +38,7 @@ paths:
         '500':
           $ref: '#/components/responses/500-InternalServerError'
       operationId: GetRegistration
-      description: Vrací registraci dle identifikátoru
+      description: Return registration based on APID
   /registrations:
     post:
       summary: Create registration
@@ -53,7 +54,7 @@ paths:
           $ref: '#/components/responses/400-BadRequest'
         '500':
           $ref: '#/components/responses/500-InternalServerError'
-      description: Vytvoření registrace na jméno k určitému datu.
+      description: Create registration based on name and choosed date.
       requestBody:
         content:
           application/json:
@@ -194,7 +195,7 @@ components:
       description: Validační chyba
   responses:
     400-BadRequest:
-      description: Example response
+      description: Validation failed response
       content:
         application/json:
           schema:
@@ -211,8 +212,14 @@ components:
                     errorMessage: Name is required!
                     attemptedValue: null
                     errorCode: NotEmptyValidator
+      headers:
+        RequestId:
+          schema:
+            type: string
+            example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
+          description: Request ID for logging and tracing
     500-InternalServerError:
-      description: Example response
+      description: Internal Server Error response
       content:
         application/json:
           schema:
@@ -223,8 +230,14 @@ components:
                 title: Internal server error
                 type: 'https://www.restapi.cz/probs/problem-details'
                 status: 500
+      headers:
+        RequestId:
+          schema:
+            type: string
+            example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
+          description: Request ID for logging and tracing
     404-NotFound:
-      description: Example response
+      description: Object not found response
       content:
         application/json:
           schema:
@@ -235,3 +248,9 @@ components:
                 title: Object not found!
                 type: 'https://www.restapi.cz/probs/problem-details'
                 status: 404
+      headers:
+        RequestId:
+          schema:
+            type: string
+            example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
+          description: Request ID for logging and tracing
