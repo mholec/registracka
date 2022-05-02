@@ -5,6 +5,9 @@ info:
 servers:
   - url: 'https://teched22.azurewebsites.net'
     description: Production
+tags:
+  - name: Registrations
+    description: Správa registrací
 paths:
   '/registrations/{id}':
     parameters:
@@ -18,7 +21,8 @@ paths:
         description: APID
     get:
       summary: Registrace dle ID
-      tags: []
+      tags:
+        - Registrations
       responses:
         '200':
           description: OK
@@ -26,23 +30,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Registration'
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
         '500':
-          description: Internal Server Error
+          $ref: '#/components/responses/500-InternalServerError'
+      operationId: GetRegistration
+      description: Vrací registraci dle identifikátoru
+  /registrations:
+    post:
+      summary: Create registration
+      operationId: CreateRegistration
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  details:
-                    type: string
-      operationId: GetRegistrationById
+                $ref: '#/components/schemas/Registration'
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+      description: Vytvoření registrace na jméno k určitému datu.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationCreate'
+      parameters: []
+      tags:
+        - Registrations
 components:
   schemas:
     Registration:
       title: Registration
       type: object
+      examples:
+        - id: ksopek8
+          name: Miroslav Holec
+          date: '2019-08-24T14:15:22Z'
       properties:
         id:
           type: string
@@ -53,11 +81,157 @@ components:
           type: string
           maxLength: 30
           description: Jméno účastníka
+          example: Jan Novák
         date:
           type: string
           format: date-time
           description: Datum
+    RegistrationCreate:
+      title: RegistrationCreate
+      type: object
+      description: Model pro registraci na událost. Registruje se účastník vůči vybranému datu.
+      properties:
+        name:
+          type: string
+          maxLength: 30
+          description: Jméno účastníka akce
+          example: Jan Novák
+        date:
+          type: string
+          format: date-time
+          description: Datum na které se registruje
+      required:
+        - name
+        - date
       examples:
-        - id: ksopek8
-          name: Miroslav Holec
+        - name: Jan Novák
           date: '2019-08-24T14:15:22Z'
+    ProblemDetails:
+      title: ProblemDetails
+      type: object
+      description: Chyba vzniklá v REST API
+      properties:
+        title:
+          type: string
+          description: Druh chyby
+          example: Internal server error
+        type:
+          type: string
+          format: uri
+          description: 'Typ chyby, informace o chybě'
+          example: 'https://www.restapi.cz/probs/problem-details'
+        status:
+          type: integer
+          description: HTTP Status Code
+          maximum: 599
+          minimum: 400
+          example: 500
+        detail:
+          type: string
+          description: Detailní informace
+      examples:
+        - title: Internal server error
+          type: 'https://www.restapi.cz/probs/problem-details'
+          status: 500
+          detail: '---'
+    HttpValidationProblemDetails:
+      title: ProblemDetails
+      type: object
+      description: Chyba vzniklá v REST API
+      examples:
+        - title: Validation failed!
+          type: 'https://www.restapi.cz/probs/problem-details'
+          status: 400
+          detail: See more in errors array
+          errors:
+            - propertyName: Name
+              errorMessage: Name is required!
+              attemptedValue: null
+              errorCode: NotEmptyValidator
+      properties:
+        title:
+          type: string
+          description: Druh chyby
+          example: Internal server error
+        type:
+          type: string
+          format: uri
+          description: 'Typ chyby, informace o chybě'
+          example: 'https://www.restapi.cz/probs/problem-details'
+        status:
+          type: integer
+          description: HTTP Status Code
+          maximum: 599
+          minimum: 400
+          example: 500
+        detail:
+          type: string
+          description: Detailní informace
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      title: ValidationError
+      type: object
+      properties:
+        propertyName:
+          type: string
+          example: Name
+        errorMessage:
+          type: string
+          example: Name is required!
+        attemptedValue:
+          type: string
+        errorCode:
+          type: string
+          example: NotEmptyValidator
+      examples:
+        - propertyName: Name
+          errorMessage: Name is required!
+          attemptedValue: null
+          errorCode: NotEmptyValidator
+      description: Validační chyba
+  responses:
+    400-BadRequest:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpValidationProblemDetails'
+          examples:
+            Default example:
+              value:
+                title: Validation failed!
+                type: 'https://www.restapi.cz/probs/problem-details'
+                status: 400
+                detail: See more in errors array
+                errors:
+                  - propertyName: Name
+                    errorMessage: Name is required!
+                    attemptedValue: null
+                    errorCode: NotEmptyValidator
+    500-InternalServerError:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            Default 500 error:
+              value:
+                title: Internal server error
+                type: 'https://www.restapi.cz/probs/problem-details'
+                status: 500
+    404-NotFound:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            Default not found:
+              value:
+                title: Object not found!
+                type: 'https://www.restapi.cz/probs/problem-details'
+                status: 404
