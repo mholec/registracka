@@ -1,0 +1,59 @@
+openapi: 3.1.0
+info:
+  title: Reservations
+  version: '1.0'
+servers:
+  - url: 'https://teched22.azurewebsites.net'
+    description: Production
+paths:
+  '/registrations/{id}':
+    parameters:
+      - schema:
+          type: string
+          minLength: 6
+          maxLength: 6
+        name: id
+        in: path
+        required: true
+        description: APID
+    get:
+      summary: Registrace dle ID
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registration'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  details:
+                    type: string
+      operationId: GetRegistrationById
+components:
+  schemas:
+    Registration:
+      title: Registration
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: Identifikátor APID
+        name:
+          type: string
+          maxLength: 30
+          description: Jméno účastníka
+        date:
+          type: string
+          format: date-time
+          description: Datum
