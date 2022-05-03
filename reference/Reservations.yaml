@@ -15,6 +15,7 @@ paths:
           type: string
           minLength: 6
           maxLength: 6
+          example: lakso9
         name: id
         in: path
         required: true
@@ -44,8 +45,8 @@ paths:
       summary: Create registration
       operationId: CreateRegistration
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
@@ -60,6 +61,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RegistrationCreate'
+        description: Registrace k vytvoření
       parameters: []
       tags:
         - Registrations
