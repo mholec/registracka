@@ -135,8 +135,8 @@ components:
           type: 'https://www.restapi.cz/probs/problem-details'
           status: 500
           detail: '---'
-    HttpValidationProblemDetails:
-      title: ProblemDetails
+    ValidationProblemDetails:
+      title: ValidationProblemDetails
       type: object
       description: Chyba vzniklá v REST API
       examples:
@@ -199,7 +199,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/HttpValidationProblemDetails'
+            $ref: '#/components/schemas/ValidationProblemDetails'
           examples:
             Default example:
               value:
