@@ -19,7 +19,7 @@ paths:
         name: id
         in: path
         required: true
-        description: APID
+        description: APID (6 chars)
     get:
       summary: Registrace dle ID
       tags:
