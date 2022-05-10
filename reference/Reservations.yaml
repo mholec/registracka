@@ -80,6 +80,7 @@ components:
           minLength: 6
           maxLength: 6
           description: Identifikátor APID
+          example: PSK86H
         name:
           type: string
           maxLength: 30
