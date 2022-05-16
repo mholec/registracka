@@ -2,6 +2,12 @@ openapi: 3.1.0
 info:
   title: Reservations
   version: '1.0'
+  summary: Ukázkové API pro účely TechEd 2022
+  description: Tato specifikace slouží jako ukázka možností OAS prezentované v rámci TechEd 2022
+  contact:
+    name: Miroslav Holec
+    url: 'https://www.restapi.cz'
+    email: mirek@miroslavholec.cz
 servers:
   - url: 'https://teched22.azurewebsites.net'
     description: Production
@@ -50,10 +56,10 @@ paths:
         '500':
           $ref: '#/components/responses/500-InternalServerError'
       operationId: GetRegistration
-      description: Return registration based on APID
+      description: Vrací registraci na základě APID
   /registrations:
     post:
-      summary: Create registration
+      summary: Vytvoření registrace
       operationId: CreateRegistration
       responses:
         '201':
@@ -66,13 +72,13 @@ paths:
           $ref: '#/components/responses/400-BadRequest'
         '500':
           $ref: '#/components/responses/500-InternalServerError'
-      description: Create registration based on name and choosed date.
+      description: Vytvoří registraci pro vybrané jméno a datum
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RegistrationCreate'
-        description: Registrace k vytvoření
+        description: 'Detaily registrace, která má být vytvořena'
       parameters: []
       tags:
         - Registrations
@@ -101,6 +107,7 @@ components:
           type: string
           format: date-time
           description: Datum
+      description: Detaily registrace na událost
     RegistrationCreate:
       title: RegistrationCreate
       type: object
@@ -184,32 +191,37 @@ components:
           description: Detailní informace
         errors:
           type: array
+          description: Seznam validačních chyb
           items:
             $ref: '#/components/schemas/ValidationError'
     ValidationError:
       title: ValidationError
       type: object
-      properties:
-        propertyName:
-          type: string
-          example: Name
-        errorMessage:
-          type: string
-          example: Name is required!
-        attemptedValue:
-          type: string
-        errorCode:
-          type: string
-          example: NotEmptyValidator
       examples:
         - propertyName: Name
           errorMessage: Name is required!
           attemptedValue: null
           errorCode: NotEmptyValidator
       description: Validační chyba
+      properties:
+        propertyName:
+          type: string
+          example: Name
+          description: Název validované property
+        errorMessage:
+          type: string
+          example: Name is required!
+          description: Chybová zpráva
+        attemptedValue:
+          type: string
+          description: Původně odeslaná (chybná) hodnota
+        errorCode:
+          type: string
+          example: NotEmptyValidator
+          description: Identifikátor chybového validátoru
   responses:
     400-BadRequest:
-      description: Validation failed response
+      description: 'Neúspěšný výsledek zpracování, obvykle způsobený neúspěšnou validací vstupů'
       content:
         application/json:
           schema:
@@ -231,9 +243,9 @@ components:
           schema:
             type: string
             example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
-          description: Request ID for logging and tracing
+          description: Request ID pro logování a trasování
     500-InternalServerError:
-      description: Internal Server Error response
+      description: Interní chyba serveru
       content:
         application/json:
           schema:
@@ -249,9 +261,9 @@ components:
           schema:
             type: string
             example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
-          description: Request ID for logging and tracing
+          description: Request ID pro logování a trasování
     404-NotFound:
-      description: Object not found response
+      description: Resource nebyl nalezen
       content:
         application/json:
           schema:
@@ -267,4 +279,4 @@ components:
           schema:
             type: string
             example: f65eee54-bfe9-4113-a715-8cbb5ddcd36f
-          description: Request ID for logging and tracing
+          description: Request ID pro logování a trasování
