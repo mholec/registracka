@@ -107,7 +107,7 @@ components:
           type: string
           format: date-time
           description: Datum
-      description: Detaily registrace na událost
+      description: Detaily registrace na událost..
     RegistrationCreate:
       title: RegistrationCreate
       type: object
