@@ -1,15 +1,17 @@
 openapi: 3.1.0
+x-stoplight:
+  id: b17f2bfeb948e
 info:
-  title: Reservations
+  title: Registračka
   version: '1.0'
-  summary: Ukázkové API pro účely TechEd 2022
-  description: Tato specifikace slouží jako ukázka možností OAS prezentované v rámci TechEd 2022
+  summary: Ukázkové API pro účely přednášek
+  description: Tato specifikace slouží jako ukázka možností OAS prezentované v rámci mých přednášek
   contact:
     name: Miroslav Holec
     url: 'https://www.restapi.cz'
     email: mirek@miroslavholec.cz
 servers:
-  - url: 'https://teched22.azurewebsites.net'
+  - url: 'https://registracka.azurewebsites.net'
     description: Production
 tags:
   - name: Registrations
