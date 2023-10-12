@@ -29,7 +29,7 @@ paths:
         required: true
         description: APID (6 chars)
     get:
-      summary: Registrace dle IDx
+      summary: Registrace dle ID
       tags:
         - Registrations
       responses:
